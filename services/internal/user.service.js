@@ -35,6 +35,7 @@ const getUser = async (_id) => {
 const infoUser = async (email, password) => {
   try {
     const user = await User.findOne({ email });
+    console.log(user);
 
     if (!user) {
       throw new Error("Usuario no encontrado.");
@@ -134,17 +135,6 @@ const createUser = async (
 
     const business = { business_id: uuidv4(), name: business_name, ruc };
 
-    const externalResponse = await createUserInExternalSystem(
-      email,
-      `${name} ${lastname}`,
-      password
-    );
-
-    let token =
-      externalResponse.data === "User does exists"
-        ? externalResponse.id
-        : externalResponse.data._id;
-
     const user = await User.create({
       name,
       lastname,
@@ -156,7 +146,6 @@ const createUser = async (
       password_reset: {},
       email,
       password,
-      token,
     });
 
     return {
